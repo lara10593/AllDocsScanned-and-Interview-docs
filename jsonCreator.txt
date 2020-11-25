@@ -1,0 +1,59 @@
+import java.io.File;
+import java.io.IOException;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
+public class HTMLParserJsoup {
+
+	public static void main(String args[]) {
+
+		Document htmlFile = null;
+		try {
+			htmlFile = Jsoup.parse(new File("d:/Profiles/lnarasimhan/Desktop/DAD/prep/EUROLAND/htmlExample.html"),"ISO-8859-1");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		Elements table = htmlFile.getElementsByTag("thead");
+		String a = new String();
+		String b = new String();
+
+		for (Element t : table) {
+			a = t.text().toString();
+		}
+		String[] a1 = a.split(" ");
+		Elements td = htmlFile.getElementsByTag("tbody");
+		for (Element t : td) {
+			b = t.text().toString();
+		}
+		String[] b1 = b.split(" ");
+		int rowSize = b1.length / a1.length;
+		String[][] result = new String[rowSize + 1][a1.length];
+		int count = 0;
+		StringBuffer resultString= new StringBuffer();
+		resultString.append("["); 
+		int firstrow =0;
+		for(int k=0;k<a1.length;k++)
+		{
+			result [firstrow][k] = a1[k];
+		}
+		for (int i = 1; i < rowSize + 1; i++) {
+			resultString.append("{");
+			for (int j = 0; j < a1.length; j++) {
+				resultString.append("\""+result[0][j]+"\""+":"+"\""+b1[count]+"\"");
+				result[i][j] = b1[count];
+				count++;
+				if(j != a1.length-1)
+				resultString.append(",");
+			}
+			resultString.append("}");
+			if(i != rowSize)
+			{
+				resultString.append(",");
+			}
+		}
+		resultString.append("]");
+		System.out.println(resultString.toString());
+	}
+}
